@@ -18,7 +18,7 @@ public class CustomerTransactionController {
         this.customerTransactionService = customerTransactionService;
     }
 
-    @PostMapping("/customer/{email}")
+    @PostMapping("/transaction/{email}")
     public ResponseEntity<CustomerAccountTransaction> createNewTransaction(@PathVariable String email, @RequestBody TransactionData transactionData){
         CustomerAccountTransaction customerTransaction= customerTransactionService.createCustomerTransaction(email,transactionData);
         if(customerTransaction!=null){

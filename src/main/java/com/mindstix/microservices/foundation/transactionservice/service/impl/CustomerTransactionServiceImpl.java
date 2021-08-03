@@ -1,10 +1,11 @@
-package com.mindstix.microservices.foundation.transactionservice.service;
+package com.mindstix.microservices.foundation.transactionservice.service.impl;
 
 import com.mindstix.microservices.foundation.transactionservice.entity.CustomerAccountTransaction;
 import com.mindstix.microservices.foundation.transactionservice.model.CustomerTransactionDetailQueueResource;
 import com.mindstix.microservices.foundation.transactionservice.model.TransactionData;
 import com.mindstix.microservices.foundation.transactionservice.proxies.CustomerServiceProxy;
 import com.mindstix.microservices.foundation.transactionservice.repository.CustomerAccountTransactionRepository;
+import com.mindstix.microservices.foundation.transactionservice.service.CustomerTransactionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

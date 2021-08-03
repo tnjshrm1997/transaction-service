@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name="customer-service")
 public interface CustomerServiceProxy {
-    @GetMapping("/customer-service/customer/{emailId}")
+    @GetMapping("/customer-service/account/{emailId}")
     Long getCustomerAccountNumber (@PathVariable String emailId);
 }
