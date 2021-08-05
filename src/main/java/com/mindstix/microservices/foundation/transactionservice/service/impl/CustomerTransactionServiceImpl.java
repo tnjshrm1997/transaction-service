@@ -4,8 +4,9 @@ import com.mindstix.microservices.foundation.transactionservice.entity.CustomerA
 import com.mindstix.microservices.foundation.transactionservice.model.CustomerTransactionDetailQueueResource;
 import com.mindstix.microservices.foundation.transactionservice.model.TransactionData;
 import com.mindstix.microservices.foundation.transactionservice.proxies.CustomerServiceProxy;
-import com.mindstix.microservices.foundation.transactionservice.repository.CustomerAccountTransactionRepository;
+import com.mindstix.microservices.foundation.transactionservice.dao.CustomerAccountTransactionDao;
 import com.mindstix.microservices.foundation.transactionservice.service.CustomerTransactionService;
+import com.mindstix.microservices.foundation.transactionservice.utilities.ConvertToObjectUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,10 @@ import java.util.Optional;
 public class CustomerTransactionServiceImpl implements CustomerTransactionService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerTransactionServiceImpl.class);
-    final CustomerAccountTransactionRepository customerAccountTransactionRepository;
+    final CustomerAccountTransactionDao customerAccountTransactionDao;
     final CustomerServiceProxy proxy;
-    public CustomerTransactionServiceImpl(CustomerAccountTransactionRepository customerAccountTransactionRepository, CustomerServiceProxy proxy) {
-        this.customerAccountTransactionRepository = customerAccountTransactionRepository;
+    public CustomerTransactionServiceImpl(CustomerAccountTransactionDao customerAccountTransactionDao, CustomerServiceProxy proxy) {
+        this.customerAccountTransactionDao = customerAccountTransactionDao;
         this.proxy = proxy;
     }
 
@@ -30,10 +31,10 @@ public class CustomerTransactionServiceImpl implements CustomerTransactionServic
             throw new InvalidParameterException();
         Optional<Long> accountNumber = getAccountNumber(email);
         if(accountNumber.isPresent()){
-            CustomerAccountTransaction customerAccountTransaction = CustomerTransactionService.toCustomerTransactionObject(email,transactionData,accountNumber.get());
-            CustomerTransactionDetailQueueResource queueResource = CustomerTransactionService.getCustomerServiceQueueResponse(customerAccountTransaction);
+            CustomerAccountTransaction customerAccountTransaction = ConvertToObjectUtility.toCustomerTransactionObject(email,transactionData,accountNumber.get());
+            CustomerTransactionDetailQueueResource queueResource = ConvertToObjectUtility.getCustomerServiceQueueResponse(customerAccountTransaction);
             LOGGER.info("Sending information to queue to update data for accountNumber: {}",accountNumber.get());
-            return customerAccountTransactionRepository.save(customerAccountTransaction);
+            return customerAccountTransactionDao.save(customerAccountTransaction);
         }
         LOGGER.info("Account doesn't Exists in system");
         return null;
