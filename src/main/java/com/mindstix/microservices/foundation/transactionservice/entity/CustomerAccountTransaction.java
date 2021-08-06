@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -18,6 +19,6 @@ public class CustomerAccountTransaction {
     private UUID transactionId;
     private String customerEmail;
     private String transactionType;
-    private Double amount;
+    private BigDecimal amount;
     private Long accountNumber;
 }

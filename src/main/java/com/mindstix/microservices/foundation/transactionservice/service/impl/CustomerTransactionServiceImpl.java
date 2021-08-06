@@ -5,6 +5,7 @@ import com.mindstix.microservices.foundation.transactionservice.model.CustomerTr
 import com.mindstix.microservices.foundation.transactionservice.model.TransactionData;
 import com.mindstix.microservices.foundation.transactionservice.proxies.CustomerServiceProxy;
 import com.mindstix.microservices.foundation.transactionservice.dao.CustomerAccountTransactionDao;
+import com.mindstix.microservices.foundation.transactionservice.rabbitmq.CustomerTransactionExchange;
 import com.mindstix.microservices.foundation.transactionservice.service.CustomerTransactionService;
 import com.mindstix.microservices.foundation.transactionservice.utilities.ConvertToObjectUtility;
 import org.slf4j.Logger;
@@ -20,9 +21,11 @@ public class CustomerTransactionServiceImpl implements CustomerTransactionServic
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerTransactionServiceImpl.class);
     final CustomerAccountTransactionDao customerAccountTransactionDao;
     final CustomerServiceProxy proxy;
-    public CustomerTransactionServiceImpl(CustomerAccountTransactionDao customerAccountTransactionDao, CustomerServiceProxy proxy) {
+    final CustomerTransactionExchange customerTransactionExchange;
+    public CustomerTransactionServiceImpl(CustomerAccountTransactionDao customerAccountTransactionDao, CustomerServiceProxy proxy, CustomerTransactionExchange customerTransactionExchange) {
         this.customerAccountTransactionDao = customerAccountTransactionDao;
         this.proxy = proxy;
+        this.customerTransactionExchange = customerTransactionExchange;
     }
 
     @Override
@@ -34,6 +37,7 @@ public class CustomerTransactionServiceImpl implements CustomerTransactionServic
             CustomerAccountTransaction customerAccountTransaction = ConvertToObjectUtility.toCustomerTransactionObject(email,transactionData,accountNumber.get());
             CustomerTransactionDetailQueueResource queueResource = ConvertToObjectUtility.getCustomerServiceQueueResponse(customerAccountTransaction);
             LOGGER.info("Sending information to queue to update data for accountNumber: {}",accountNumber.get());
+            customerTransactionExchange.publishMessageToQueue(queueResource);
             return customerAccountTransactionDao.save(customerAccountTransaction);
         }
         LOGGER.info("Account doesn't Exists in system");

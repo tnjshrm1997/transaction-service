@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -15,5 +16,5 @@ import java.io.Serializable;
 public class CustomerTransactionDetailQueueResource implements Serializable{
     private Long accountNumber;
     private String transactionType;
-    private double amount;
+    private BigDecimal amount;
 }
