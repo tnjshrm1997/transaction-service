@@ -4,10 +4,13 @@ import com.microservices.foundation.transactionservice.entity.CustomerAccountTra
 import com.microservices.foundation.transactionservice.model.CustomerTransactionDetailQueueResource;
 import com.microservices.foundation.transactionservice.model.TransactionData;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class ConvertToObjectUtility {
-
+    private ConvertToObjectUtility(){
+        throw new IllegalStateException("Utility class");
+    }
     public static CustomerTransactionDetailQueueResource getCustomerServiceQueueResponse(CustomerAccountTransaction customerAccountTransaction) {
         return CustomerTransactionDetailQueueResource
                 .builder()
@@ -24,6 +27,7 @@ public class ConvertToObjectUtility {
                 .customerEmail(email)
                 .accountNumber(accountNumber)
                 .amount(transactionData.getAmount())
+                .createDate(LocalDate.now())
                 .build();
     }
 }
